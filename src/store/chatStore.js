@@ -162,6 +162,28 @@ const createChatStore = create()(persist((set, get) => ({
             };
         });
     },
+    removeSession: (sessionId) => {
+        set((state) => {
+            const sessions = state.sessions.filter((s) => s.id !== sessionId);
+            const wasCurrent = state.currentSessionId === sessionId;
+            const nextId = wasCurrent && sessions.length > 0
+                ? sessions[0].id
+                : wasCurrent
+                    ? null
+                    : state.currentSessionId;
+            const messages = nextId != null ? (sessions.find((s) => s.id === nextId)?.messages ?? []) : [];
+            return {
+                sessions,
+                currentSessionId: nextId,
+                messages,
+            };
+        });
+    },
+    updateSessionTitle: (sessionId, title) => {
+        set((state) => ({
+            sessions: state.sessions.map((s) => s.id === sessionId ? { ...s, title: title.trim() || s.title } : s),
+        }));
+    },
 }), {
     name: 'chat-storage',
     partialize: (state) => ({

@@ -120,41 +120,27 @@ const App = () => {
         };
         try {
             const { appendMessageContent } = useChatStore.getState();
-            let lastChunk = null;
+            let lastEvalCount = 0;
+            let lastTotalDuration = 0;
             await apiClient.postStream('/api/chat', body, (chunk) => {
                 if (chunk.message?.content) {
                     appendMessageContent(aiMessageId, chunk.message.content);
                 }
                 if (chunk.done) {
-                    lastChunk = chunk;
+                    lastEvalCount = chunk.eval_count ?? 0;
+                    lastTotalDuration = chunk.total_duration ?? 0;
                 }
             });
-            // Update metadata on the assistant message when stream completes (Ollama API: total_duration, prompt_eval_count, eval_count, etc.)
+            // Update metadata on the assistant message when stream completes
             const store = useChatStore.getState();
-            const totalDurationNs = lastChunk?.total_duration;
-            const promptEvalCount = lastChunk?.prompt_eval_count ?? 0;
-            const evalCount = lastChunk?.eval_count ?? 0;
-            const promptEvalDurationNs = lastChunk?.prompt_eval_duration;
-            const evalDurationNs = lastChunk?.eval_duration;
-            const loadDurationNs = lastChunk?.load_duration;
-            const doneReason = lastChunk?.done_reason;
             const updated = store.messages.map((m) => m.id === aiMessageId
                 ? {
                     ...m,
                     metadata: {
                         ...m.metadata,
                         model: selectedModel.id,
-                        tokensUsed: evalCount,
-                        duration: totalDurationNs != null ? Math.round(totalDurationNs / 1e6) : 0,
-                        responseMetrics: (totalDurationNs != null || promptEvalCount > 0 || evalCount > 0) ? {
-                            totalDurationNs,
-                            promptEvalCount,
-                            evalCount,
-                            promptEvalDurationNs,
-                            evalDurationNs,
-                            loadDurationNs,
-                            doneReason,
-                        } : undefined,
+                        tokensUsed: lastEvalCount,
+                        duration: lastTotalDuration ? Math.round(lastTotalDuration / 1e6) : 0,
                     },
                 }
                 : m);

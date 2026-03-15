@@ -60,3 +60,17 @@ export async function deleteChat(id) {
     if (!res.ok && res.status !== 204)
         throw new Error(`Failed to delete chat: ${res.statusText}`);
 }
+export async function renameChat(id, title) {
+    const res = await fetch(`${CHATS_API}/chats/${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: title.trim() }),
+    });
+    if (!res.ok) {
+        if (res.status === 404)
+            throw new Error('Chat not found');
+        throw new Error(`Failed to rename chat: ${res.statusText}`);
+    }
+    const raw = await res.json();
+    return normalizeSession(raw);
+}
