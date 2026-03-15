@@ -2,6 +2,21 @@
   "name": "ollama-chat-ui",
   "private": true,
   "version": "0.1.0",
+  "description": "Modern web UI for chatting with Ollama models locally — streaming, sessions, file attachments",
+  "keywords": [
+    "ollama",
+    "ollama-ui",
+    "llm",
+    "local-ai",
+    "chat-ui",
+    "streaming-chat",
+    "react",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "llama",
+    "ai-chat"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
