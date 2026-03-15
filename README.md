@@ -4,8 +4,7 @@ A modern web interface for chatting with [Ollama](https://ollama.com) models loc
 
 ![Ollama Chat UI screenshot](Screenshot%202026-03-15%20at%201.10.13%20PM.png)
 
-**Topics (add these as [GitHub repository topics](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics) for discoverability):**  
-`ollama` `ollama-ui` `llm` `local-ai` `local-llm` `chat-ui` `streaming-chat` `react` `typescript` `vite` `tailwindcss` `openai-alternative` `llama` `ai-chat` `markdown` `zustand`
+
 
 ---
 
