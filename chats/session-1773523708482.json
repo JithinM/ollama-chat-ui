@@ -1,0 +1,30 @@
+{
+  "id": "session-1773523708482",
+  "title": "hi",
+  "createdAt": "2026-03-14T21:28:28.482Z",
+  "messages": [
+    {
+      "id": "msg-1773523708482",
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2026-03-14T21:28:28.482Z",
+      "attachments": [],
+      "metadata": {
+        "model": "huihui_ai/qwen3.5-abliterated:latest",
+        "tokensUsed": 0,
+        "duration": 0
+      }
+    },
+    {
+      "id": "msg-1773523708482-ai",
+      "role": "assistant",
+      "content": "Hi there! 👋\n\nHow can I help you today? Whether you have a question, need assistance with a task, or just want to chat, I'm here to help!",
+      "timestamp": "2026-03-14T21:28:28.482Z",
+      "metadata": {
+        "model": "huihui_ai/qwen3.5-abliterated:latest",
+        "tokensUsed": 0,
+        "duration": 0
+      }
+    }
+  ]
+}

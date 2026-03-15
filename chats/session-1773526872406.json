@@ -1,0 +1,30 @@
+{
+  "id": "session-1773526872406",
+  "title": "hi, what day is today?",
+  "createdAt": "2026-03-14T22:21:12.406Z",
+  "messages": [
+    {
+      "id": "msg-1773526882830",
+      "role": "user",
+      "content": "hi, what day is today?",
+      "timestamp": "2026-03-14T22:21:22.830Z",
+      "attachments": [],
+      "metadata": {
+        "model": "huihui_ai/qwen3.5-abliterated:latest",
+        "tokensUsed": 0,
+        "duration": 0
+      }
+    },
+    {
+      "id": "msg-1773526882830-ai",
+      "role": "assistant",
+      "content": "Hi! Today is **Thursday, October 24, 2024**.\n\nI hope you're having a wonderful day! Is there anything specific I can help you with?",
+      "timestamp": "2026-03-14T22:21:22.830Z",
+      "metadata": {
+        "model": "huihui_ai/qwen3.5-abliterated:latest",
+        "tokensUsed": 0,
+        "duration": 0
+      }
+    }
+  ]
+}
