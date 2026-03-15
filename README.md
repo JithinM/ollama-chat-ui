@@ -34,7 +34,7 @@ npm run dev
 
 - App: **http://localhost:3000**
 - Vite proxies `/api` → Ollama (`http://localhost:11434`)
-- Vite proxies `/chats-api` → Chats server (`http://localhost:3080`). If the chats server is not running, session list/load/save will fail; the rest of the app still works.
+- Vite proxies `/chats-api` → Chats server (`http://localhost:3080`). If the chats server is not running, session list/load/save will fail (you may see "Bad Gateway"); the rest of the app still works. Error messages include a hint to start the Chats API with `npm run server` or `npm run dev:full`.
 
 **Option B — Chats API server only**  
 Stores and loads chat sessions as JSON files in the `chats/` directory.
@@ -169,7 +169,7 @@ ollama-chat-ui/
   Connection and API errors are shown in a banner. React errors are caught by the Error Boundary.
 
 - **Persistence**  
-  Server URL and connection-related settings are persisted (e.g. in `localStorage` via Zustand persist). Chat content is persisted only when the Chats API server is running and the app is configured to use it (e.g. via the `/chats-api` proxy in dev).
+  Server URL and connection-related settings are persisted (e.g. in `localStorage` via Zustand persist). Chat content is persisted only when the Chats API server is running and the app is configured to use it (e.g. via the `/chats-api` proxy in dev). If the Chats API is unavailable (e.g. not running), save/list/load errors include a hint to run `npm run server` or `npm run dev:full`.
 
 ---
 

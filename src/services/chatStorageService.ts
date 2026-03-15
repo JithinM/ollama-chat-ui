@@ -31,9 +31,15 @@ export interface ChatSummary {
   createdAt: string;
 }
 
+function chatsApiHint(res: Response): string {
+  return res.status === 502 || res.status === 503
+    ? ' Chats API server may not be running (try: npm run server or npm run dev:full).'
+    : '';
+}
+
 export async function listChats(): Promise<ChatSummary[]> {
   const res = await fetch(`${CHATS_API}/chats`);
-  if (!res.ok) throw new Error(`Failed to list chats: ${res.statusText}`);
+  if (!res.ok) throw new Error(`Failed to list chats: ${res.statusText}.${chatsApiHint(res)}`);
   return res.json();
 }
 
@@ -41,7 +47,7 @@ export async function loadChat(id: string): Promise<ChatSession> {
   const res = await fetch(`${CHATS_API}/chats/${encodeURIComponent(id)}`);
   if (!res.ok) {
     if (res.status === 404) throw new Error('Chat not found');
-    throw new Error(`Failed to load chat: ${res.statusText}`);
+    throw new Error(`Failed to load chat: ${res.statusText}.${chatsApiHint(res)}`);
   }
   const raw = await res.json();
   return normalizeSession(raw);
@@ -62,14 +68,14 @@ export async function saveChat(session: ChatSession): Promise<ChatSession> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`Failed to save chat: ${res.statusText}`);
+  if (!res.ok) throw new Error(`Failed to save chat: ${res.statusText}.${chatsApiHint(res)}`);
   const raw = await res.json();
   return normalizeSession(raw);
 }
 
 export async function deleteChat(id: string): Promise<void> {
   const res = await fetch(`${CHATS_API}/chats/${encodeURIComponent(id)}`, { method: 'DELETE' });
-  if (!res.ok && res.status !== 204) throw new Error(`Failed to delete chat: ${res.statusText}`);
+  if (!res.ok && res.status !== 204) throw new Error(`Failed to delete chat: ${res.statusText}.${chatsApiHint(res)}`);
 }
 
 export async function renameChat(id: string, title: string): Promise<ChatSession> {
@@ -80,7 +86,7 @@ export async function renameChat(id: string, title: string): Promise<ChatSession
   });
   if (!res.ok) {
     if (res.status === 404) throw new Error('Chat not found');
-    throw new Error(`Failed to rename chat: ${res.statusText}`);
+    throw new Error(`Failed to rename chat: ${res.statusText}.${chatsApiHint(res)}`);
   }
   const raw = await res.json();
   return normalizeSession(raw);

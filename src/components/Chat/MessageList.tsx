@@ -100,6 +100,16 @@ export const MessageList: React.FC<MessageListProps> = ({
     });
   };
 
+  const formatDuration = (ms: number): string => {
+    const seconds = ms / 1000;
+    if (seconds < 60) {
+      return seconds < 1 ? `${Math.round(ms)}ms` : `${seconds.toFixed(1)}s`;
+    }
+    const m = Math.floor(seconds / 60);
+    const s = Math.round(seconds % 60);
+    return s > 0 ? `${m}m ${s}s` : `${m}m`;
+  };
+
   const renderMessage = (message: Message) => {
     const isUser = message.role === 'user';
     const isSystem = message.role === 'system';
@@ -164,11 +174,28 @@ export const MessageList: React.FC<MessageListProps> = ({
                   {message.content}
                 </p>
               ) : (
-                <div className="prose prose-base max-w-none text-gray-800 pr-10">
-                  <ReactMarkdown components={markdownComponents}>
-                    {message.content || ''}
-                  </ReactMarkdown>
-                </div>
+                <>
+                  <div className="prose prose-base max-w-none text-gray-800 pr-10">
+                    <ReactMarkdown components={markdownComponents}>
+                      {message.content || ''}
+                    </ReactMarkdown>
+                  </div>
+                  {message.metadata && (message.metadata.tokensUsed != null || (message.metadata.duration != null && message.metadata.duration > 0)) && (
+                    <div className="mt-2 pt-2 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+                      {message.metadata.duration != null && message.metadata.duration > 0 && (
+                        <span title="Total time">⏱ {formatDuration(message.metadata.duration)}</span>
+                      )}
+                      {message.metadata.tokensUsed != null && (
+                        <span title="Tokens generated">{message.metadata.tokensUsed} tokens</span>
+                      )}
+                      {message.metadata.tokensUsed != null && message.metadata.duration != null && message.metadata.duration > 0 && (
+                        <span title="Tokens per second">
+                          {((message.metadata.tokensUsed / (message.metadata.duration / 1000))).toFixed(1)} tok/s
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
 
               {message.attachments && message.attachments.length > 0 && (
