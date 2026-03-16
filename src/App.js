@@ -14,7 +14,7 @@ function getSessionTitle(messages) {
     return first ? first.slice(0, 28) + (first.length > 28 ? '…' : '') : 'New chat';
 }
 const App = () => {
-    const { messages, isStreaming, addMessage, setStreaming, setError, sessions, currentSessionId, setSessionsFromServerList, } = useChatStore();
+    const { messages, isStreaming, addMessage, setMessages, setStreaming, setError, sessions, currentSessionId, setSessionsFromServerList, } = useChatStore();
     const saveTimeoutRef = useRef(null);
     const { testConnection } = useConfigStore();
     const { selectedModel, fetchModels, selectModel } = useModelStore();
@@ -131,7 +131,7 @@ const App = () => {
                     lastTotalDuration = chunk.total_duration ?? 0;
                 }
             });
-            // Update metadata on the assistant message when stream completes
+            // Update metadata on the assistant message when stream completes (sync to session so older responses keep their stats)
             const store = useChatStore.getState();
             const updated = store.messages.map((m) => m.id === aiMessageId
                 ? {
@@ -144,7 +144,7 @@ const App = () => {
                     },
                 }
                 : m);
-            useChatStore.setState({ messages: updated });
+            setMessages(updated);
         }
         catch (error) {
             setError(error);

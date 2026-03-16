@@ -28,6 +28,7 @@ const App: React.FC = () => {
     messages,
     isStreaming,
     addMessage,
+    setMessages,
     setStreaming,
     setError,
     sessions,
@@ -162,7 +163,7 @@ const App: React.FC = () => {
         }
       });
 
-      // Update metadata on the assistant message when stream completes
+      // Update metadata on the assistant message when stream completes (sync to session so older responses keep their stats)
       const store = useChatStore.getState();
       const updated = store.messages.map((m) =>
         m.id === aiMessageId
@@ -177,7 +178,7 @@ const App: React.FC = () => {
             }
           : m
       );
-      useChatStore.setState({ messages: updated });
+      setMessages(updated);
     } catch (error) {
       setError(error as Error);
     } finally {
