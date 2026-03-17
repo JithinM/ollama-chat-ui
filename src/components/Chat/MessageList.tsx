@@ -10,6 +10,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import type { Components } from 'react-markdown';
 import { Message } from '@/types';
+import { ThinkingSection } from './ThinkingSection';
 
 const markdownComponents: Components = {
   p: ({ children }) => <p className="mb-3 last:mb-0 text-base leading-relaxed">{children}</p>,
@@ -67,6 +68,19 @@ export const MessageList: React.FC<MessageListProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [expandedThinkingIds, setExpandedThinkingIds] = useState<Set<string>>(new Set());
+
+  const toggleThinking = (messageId: string) => {
+    setExpandedThinkingIds(prev => {
+      const next = new Set(prev);
+      if (next.has(messageId)) {
+        next.delete(messageId);
+      } else {
+        next.add(messageId);
+      }
+      return next;
+    });
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -175,6 +189,14 @@ export const MessageList: React.FC<MessageListProps> = ({
                 </p>
               ) : (
                 <>
+                  {message.thinking && (
+                    <ThinkingSection
+                      thinking={message.thinking}
+                      isStreaming={isStreaming && message.id === messages[messages.length - 1]?.id}
+                      isExpanded={expandedThinkingIds.has(message.id)}
+                      onToggle={() => toggleThinking(message.id)}
+                    />
+                  )}
                   <div className="prose prose-base max-w-none text-gray-800 pr-10">
                     <ReactMarkdown components={markdownComponents}>
                       {message.content || ''}

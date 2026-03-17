@@ -46,6 +46,7 @@ interface ChatStore extends ChatState {
   setMessages: (messages: Message[]) => void;
   clearHistory: () => void;
   appendMessageContent: (messageId: string, content: string) => void;
+  appendThinkingContent: (messageId: string, thinking: string) => void;
   startNewChat: () => void;
   setCurrentSession: (sessionId: string) => void;
   /** Merge server list (from JSON directory) into sessions; keeps existing messages for sessions we have. */
@@ -157,6 +158,25 @@ const createChatStore = create<ChatStore>()(
                   ...s,
                   messages: s.messages.map((msg) =>
                     msg.id === messageId ? { ...msg, content: msg.content + content } : msg
+                  ),
+                }
+              : s
+          );
+          const cur = sessions.find((s) => s.id === sid);
+          return { sessions, messages: cur?.messages ?? [] };
+        });
+      },
+
+      appendThinkingContent: (messageId: string, thinking: string) => {
+        set((state) => {
+          const sid = state.currentSessionId;
+          if (!sid) return state;
+          const sessions = state.sessions.map((s) =>
+            s.id === sid
+              ? {
+                  ...s,
+                  messages: s.messages.map((msg) =>
+                    msg.id === messageId ? { ...msg, thinking: (msg.thinking || '') + thinking } : msg
                   ),
                 }
               : s

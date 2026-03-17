@@ -12,6 +12,7 @@ export interface Message {
   id: string;
   role: MessageRole;
   content: string;
+  thinking?: string;
   timestamp: Date;
   attachments?: FileMetadata[];
   metadata?: MessageMetadata;
@@ -70,6 +71,7 @@ export interface HistoryParams {
 export interface StreamResponse {
   messageId: string;
   content: string;
+  thinking?: string;
   isComplete: boolean;
   metadata: StreamMetadata;
 }

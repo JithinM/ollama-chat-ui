@@ -250,7 +250,7 @@ export class ApiClient {
   async postStream(
     url: string,
     body: unknown,
-    onChunk: (chunk: { message?: { content?: string }; done?: boolean; [key: string]: unknown }) => void
+    onChunk: (chunk: { message?: { content?: string; thinking?: string }; done?: boolean; [key: string]: unknown }) => void
   ): Promise<void> {
     const { baseUrl, timeout, apiKey } = this.config;
     const fullUrl = baseUrl.replace(/\/$/, '') + (url.startsWith('/') ? url : '/' + url);

@@ -93,6 +93,7 @@ const App = () => {
             id: aiMessageId,
             role: 'assistant',
             content: '',
+            thinking: '',
             timestamp: new Date(),
             metadata: {
                 model: selectedModel.id,
@@ -119,12 +120,15 @@ const App = () => {
             stream: true,
         };
         try {
-            const { appendMessageContent } = useChatStore.getState();
+            const { appendMessageContent, appendThinkingContent } = useChatStore.getState();
             let lastEvalCount = 0;
             let lastTotalDuration = 0;
             await apiClient.postStream('/api/chat', body, (chunk) => {
                 if (chunk.message?.content) {
                     appendMessageContent(aiMessageId, chunk.message.content);
+                }
+                if (chunk.message?.thinking) {
+                    appendThinkingContent(aiMessageId, chunk.message.thinking);
                 }
                 if (chunk.done) {
                     lastEvalCount = chunk.eval_count ?? 0;

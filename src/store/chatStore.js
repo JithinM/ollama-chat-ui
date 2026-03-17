@@ -103,6 +103,21 @@ const createChatStore = create()(persist((set, get) => ({
             return { sessions, messages: cur?.messages ?? [] };
         });
     },
+    appendThinkingContent: (messageId, thinking) => {
+        set((state) => {
+            const sid = state.currentSessionId;
+            if (!sid)
+                return state;
+            const sessions = state.sessions.map((s) => s.id === sid
+                ? {
+                    ...s,
+                    messages: s.messages.map((msg) => msg.id === messageId ? { ...msg, thinking: (msg.thinking || '') + thinking } : msg),
+                }
+                : s);
+            const cur = sessions.find((s) => s.id === sid);
+            return { sessions, messages: cur?.messages ?? [] };
+        });
+    },
     startNewChat: () => {
         set((state) => {
             const sid = state.currentSessionId;
